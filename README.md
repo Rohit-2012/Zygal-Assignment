@@ -39,4 +39,4 @@ If you have any questions or feedback regarding the application, you can reach o
 
 ## Deployment Site Link
 
-Open https://zygal-assignment.onrender.com/ in your browser to view the application.
+Open https://zygal-assignment.netlify.app/ in your browser to view the application.
