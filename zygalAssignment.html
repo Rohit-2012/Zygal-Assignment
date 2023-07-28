@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Rohit Kirti" />
+    <title>Downloadable HTML Canvas Data</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+      h1 {
+        font-size: 40px;
+      }
+      a {
+        font-size: 20px;
+        text-decoration: none;
+        border-radius: 0.6rem;
+        background-color: rgb(0, 101, 196);
+        color: white;
+        padding: 1rem;
+        box-shadow: 2px 2px 4px black;
+      }
+      a:hover {
+        position: relative;
+        bottom: 2px;
+        right: 2px;
+        background-color: rgb(7, 113, 211);
+        box-shadow: 4px 4px 8px black;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <h1>Zygal Assignment on HTML5 Canvas</h1>
+    <canvas
+      id="canvas"
+      width="16"
+      height="34"
+      style="border: 1px solid"
+    ></canvas>
+    <a id="download" href="#" download="hex_data"
+      >Download <i class="fa fa-download"></i
+    ></a>
+    <div id="data"></div>
+
+    <script>
+      // drawing the character in Canvas
+      const draw = () => {
+        const canvas = document.getElementById("canvas");
+        const cntxt = canvas.getContext("2d");
+
+        cntxt.fillStyle = "rgb(1, 132, 255)";
+        cntxt.fillRect(0, 0, canvas.width, canvas.height);
+
+        cntxt.font = "bold 20px Times New ROman";
+        cntxt.fillStyle = "red";
+        cntxt.textAlign = "center";
+        cntxt.textBaseline = "middle";
+        cntxt.fillText("₹", canvas.width / 2, canvas.height / 2);
+      };
+
+      //converting the canvas pixel color data into hexadecimal format
+      const hexConversion = () => {
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+        const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imgData.data;
+        const hexData = [];
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          const rHex = pixels[i].toString(16).padStart(2, "0");
+          const gHex = pixels[i + 1].toString(16).padStart(2, "0");
+          const bHex = pixels[i + 2].toString(16).padStart(2, "0");
+
+          const hex = "#" + rHex + gHex + bHex;
+          hexData.push(hex);
+        }
+        //converting the hexData array into 16*34 matrix form
+        const matrix = [];
+        for (let i = 0; i < 34; i++) {
+          matrix[i] = hexData.slice(i * 16, (i + 1) * 16).join(", ");
+        }
+        return matrix.join("\n");
+      };
+
+      // downloading the matrix data in text format
+      const downloadData = () => {
+        const result = hexConversion();
+        const resultBlob = new Blob([result], { type: "text/plain" });
+        const url = URL.createObjectURL(resultBlob);
+        console.log(url);
+
+        const downloadLink = document.getElementById("download");
+        downloadLink.href = url;
+      };
+
+      draw();
+      const downloadingLink = document.getElementById("download");
+      downloadingLink.addEventListener("click", downloadData);
+    </script>
+  </body>
+</html>
